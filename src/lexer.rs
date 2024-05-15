@@ -36,10 +36,8 @@ impl<'a> Lexer<'a> {
 
     fn read_char(&mut self) {
         if self.read_position >= self.input.len() {
-            println!("setting as empty");
             self.ch = 0 as char;
         } else {
-            println!("not setting as empty");
             if let Some(ch) = self.input.chars().nth(self.read_position) {
                 self.ch = ch;
             } else {
@@ -49,6 +47,15 @@ impl<'a> Lexer<'a> {
 
         self.position = self.read_position;
         self.read_position += 1;
+    }
+
+    fn read_number(&mut self) -> usize {
+        let pos = self.position;
+        while is_digit(self.ch) {
+            self.read_char();
+        }
+
+        self.input[pos..self.position].parse().unwrap()
     }
 
     pub fn next_token(&mut self) -> Token {
@@ -72,20 +79,23 @@ impl<'a> Lexer<'a> {
             '0' => TokenKind::EOF,
             _ => {
                 if is_letter(self.ch) {
-                    println!("is a letter, {}", self.ch);
                     return Token {
                         literal: self.read_identifier().to_string(),
                         token: lookup_identifier(&self.ch.to_string()),
                     };
+                } else if is_digit(self.ch) {
+                    let num = self.read_number();
+                    return Token {
+                        literal: self.read_identifier().to_string(),
+                        token: TokenKind::INT(num.try_into().unwrap()),
+                    };
+                } else {
+                    TokenKind::ILLEGAL
                 }
-
-                println!("returning illegal");
-                return Token {
-                    token: TokenKind::ILLEGAL,
-                    literal: "".to_string(),
-                };
             }
         };
+
+        self.read_char();
 
         return Token {
             token: t,
@@ -111,6 +121,10 @@ impl<'a> Lexer<'a> {
 
 pub fn is_letter(c: char) -> bool {
     c.is_ascii_alphabetic() || c == '_'
+}
+
+pub fn is_digit(c: char) -> bool {
+    c >= '0' && c <= '9'
 }
 
 #[cfg(test)]

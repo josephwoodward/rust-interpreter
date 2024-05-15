@@ -5,7 +5,7 @@ mod lexer;
 mod token;
 
 fn main() {
-    let mut l = Lexer::new("let x = 1");
+    let mut l = Lexer::new("let x == 1");
     let mut t: Token;
 
     loop {
