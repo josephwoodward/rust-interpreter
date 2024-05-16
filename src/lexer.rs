@@ -79,15 +79,16 @@ impl<'a> Lexer<'a> {
             '0' => TokenKind::EOF,
             _ => {
                 if is_letter(self.ch) {
+                    let ident = self.read_identifier();
                     return Token {
-                        literal: self.read_identifier().to_string(),
-                        token: lookup_identifier(&self.ch.to_string()),
+                        kind: lookup_identifier(&ident),
+                        literal: ident,
                     };
                 } else if is_digit(self.ch) {
                     let num = self.read_number();
                     return Token {
+                        kind: TokenKind::INT(num.try_into().unwrap()),
                         literal: self.read_identifier().to_string(),
-                        token: TokenKind::INT(num.try_into().unwrap()),
                     };
                 } else {
                     TokenKind::ILLEGAL
@@ -98,8 +99,8 @@ impl<'a> Lexer<'a> {
         self.read_char();
 
         return Token {
-            token: t,
-            literal: self.ch.to_string(),
+            kind: t,
+            literal: "boo".to_string(),
         };
     }
 
@@ -115,7 +116,10 @@ impl<'a> Lexer<'a> {
             self.read_char();
         }
 
-        self.input[position..self.position].to_string()
+        let x = self.input[position..self.position].to_string();
+
+        // println!("chars {}", x);
+        x
     }
 }
 
