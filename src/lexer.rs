@@ -65,6 +65,8 @@ impl<'a> Lexer<'a> {
             ';' => TokenKind::SEMICOLON,
             '(' => TokenKind::LPAREN,
             ')' => TokenKind::RPAREN,
+            '{' => TokenKind::LBRACE,
+            '}' => TokenKind::RBRACE,
             ',' => TokenKind::COMMA,
             '+' => TokenKind::PLUS,
             '-' => TokenKind::MINUS,
@@ -133,13 +135,30 @@ pub fn is_digit(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use crate::token::TokenKind;
+
+    use super::Lexer;
 
     #[test]
     fn test_next_token() {
-        let _ = "let five = 5".to_string();
-        // assert_eq!(
-        //     generate_hash("dGhlIHNhbXBsZSBub25jZQ==".to_string()),
-        //     "s3pPLMBiTxaQ9kYGzzhZRbK+xOo="
-        // )
+        let input = "=+(){},;";
+        let mut lexer = Lexer::new(input.into());
+
+        let tokens = vec![
+            TokenKind::ASSIGN,
+            TokenKind::PLUS,
+            TokenKind::LPAREN,
+            TokenKind::RPAREN,
+            TokenKind::LBRACE,
+            TokenKind::RBRACE,
+            TokenKind::COMMA,
+            TokenKind::SEMICOLON,
+        ];
+
+        for token in tokens {
+            let next_token = lexer.next_token();
+            println!("expected: {:?}, received {:?}", token, next_token.kind);
+            assert_eq!(token, next_token.kind);
+        }
     }
 }

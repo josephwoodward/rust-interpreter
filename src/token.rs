@@ -87,6 +87,7 @@ impl fmt::Display for TokenKind {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Token {
     pub kind: TokenKind,
     pub literal: String,
