@@ -11,14 +11,10 @@ fn main() {
     loop {
         t = l.next_token();
         println!("token literal: {}, token kind: {}", t.literal, t.kind);
-        // print_type(&t.token);
 
         if t.kind == TokenKind::ILLEGAL {
             println!("end");
             return;
         }
     }
-}
-fn print_type<T>(_: &T) {
-    println!("{:?}", std::any::type_name::<T>());
 }
