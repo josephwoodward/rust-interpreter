@@ -140,8 +140,8 @@ mod tests {
     use super::Lexer;
 
     #[test]
-    fn test_next_token() {
-        let input = "=+(){},;";
+    fn test_next_token_simple() {
+        let input = "=+(){},;==";
         let mut lexer = Lexer::new(input.into());
 
         let tokens = vec![
@@ -152,6 +152,36 @@ mod tests {
             TokenKind::LBRACE,
             TokenKind::RBRACE,
             TokenKind::COMMA,
+            TokenKind::SEMICOLON,
+            TokenKind::EQ,
+        ];
+
+        for token in tokens {
+            let next_token = lexer.next_token();
+            println!("expected: {:?}, received {:?}", token, next_token.kind);
+            assert_eq!(token, next_token.kind);
+        }
+    }
+
+    #[test]
+    fn test_assignment_mixed_spaces() {
+        let input = r#"let five = 5;let six=6;"#;
+        let mut lexer = Lexer::new(input.into());
+
+        let tokens = vec![
+            TokenKind::LET,
+            TokenKind::IDENTIFIER {
+                name: "five".to_string(),
+            },
+            TokenKind::ASSIGN,
+            TokenKind::INT(5),
+            TokenKind::SEMICOLON,
+            TokenKind::LET,
+            TokenKind::IDENTIFIER {
+                name: "six".to_string(),
+            },
+            TokenKind::ASSIGN,
+            TokenKind::INT(6),
             TokenKind::SEMICOLON,
         ];
 
