@@ -134,9 +134,9 @@ pub fn is_digit(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::token::TokenKind;
 
     use super::Lexer;
+    use crate::token::TokenKind;
 
     #[test]
     fn test_next_token_simple() {
@@ -166,6 +166,7 @@ mod tests {
     fn test_assignment_mixed_spaces() {
         let input = r#"
         let five = 5;
+
         let six=6;
         "#;
         let mut lexer = Lexer::new(input.into());
