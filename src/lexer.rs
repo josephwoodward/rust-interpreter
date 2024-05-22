@@ -78,7 +78,17 @@ impl<'a> Lexer<'a> {
                     TokenKind::ASSIGN
                 }
             }
-            '0' => TokenKind::EOF,
+            '"' => {
+                // println!(
+                //     "posistion: {}, read position: {}",
+                //     self.position, self.read_position
+                // );
+                let s = self.read_string();
+                println!("string: {}", s);
+
+                TokenKind::STRING(s)
+            }
+            '\u{0}' => TokenKind::EOF,
             _ => {
                 if is_letter(self.ch) {
                     let ident = self.read_identifier();
@@ -113,6 +123,25 @@ impl<'a> Lexer<'a> {
         }
     }
 
+    pub fn read_string(&mut self) -> String {
+        let pos = self.position + 1;
+        loop {
+            self.read_char();
+            if self.ch == '"' || self.ch == '\u{0}' {
+                break;
+            }
+        }
+
+        let x = self.input[pos..self.position].to_string();
+
+        // consume the end "
+        if self.ch == '"' {
+            self.read_char();
+        }
+
+        return x;
+    }
+
     pub fn read_identifier(&mut self) -> String {
         let position = self.position;
         while is_letter(self.ch) {
@@ -135,8 +164,10 @@ pub fn is_digit(c: char) -> bool {
 #[cfg(test)]
 mod tests {
 
+    use insta::assert_snapshot;
+
     use super::Lexer;
-    use crate::token::TokenKind;
+    use crate::token::{Token, TokenKind};
 
     #[test]
     fn test_next_token_simple() {
@@ -168,6 +199,7 @@ mod tests {
         let five = 5;
 
         let six=6;
+        let msg = "HelloWorld!";
         "#;
         let mut lexer = Lexer::new(input.into());
 
@@ -186,6 +218,14 @@ mod tests {
             TokenKind::ASSIGN,
             TokenKind::INT(6),
             TokenKind::SEMICOLON,
+            TokenKind::LET,
+            TokenKind::IDENTIFIER {
+                name: "msg".to_string(),
+            },
+            TokenKind::ASSIGN,
+            TokenKind::STRING("HelloWorld!".to_string()),
+            TokenKind::SEMICOLON,
+            TokenKind::EOF,
         ];
 
         for token in tokens {
@@ -193,5 +233,33 @@ mod tests {
             println!("expected: {:?}, received {:?}", token, next_token.kind);
             assert_eq!(token, next_token.kind);
         }
+    }
+
+    // #[test]
+    fn test_assignment_mixed_spaces_snapshot() {
+        let input = r#"
+        let five = 5;
+
+        let six=6;
+        let name = "Hello World!";
+        "#;
+
+        let lexer = Lexer::new(input.into());
+        verify_snapshot("simple", lexer, input);
+    }
+
+    fn verify_snapshot(name: &str, mut l: Lexer, input: &str) {
+        let mut tokens: Vec<Token> = vec![];
+        loop {
+            let t = l.next_token();
+            if t.kind == TokenKind::EOF {
+                tokens.push(t);
+                break;
+            } else {
+                tokens.push(t);
+            }
+        }
+
+        assert_snapshot!(name, serde_json::to_string_pretty(&tokens).unwrap(), input);
     }
 }

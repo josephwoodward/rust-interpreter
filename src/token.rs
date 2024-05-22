@@ -1,9 +1,12 @@
 #![allow(dead_code)]
 
 use core::fmt;
+use serde::Deserialize;
 use std::fmt::Formatter;
 
-#[derive(Debug, PartialEq)]
+use serde::Serialize;
+
+#[derive(Clone, Debug, Eq, Hash, Ord, Serialize, Deserialize, PartialOrd, PartialEq)]
 pub enum TokenKind {
     ILLEGAL,
     EOF,
@@ -87,7 +90,7 @@ impl fmt::Display for TokenKind {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, Ord, Serialize, Deserialize, PartialOrd, PartialEq)]
 pub struct Token {
     pub kind: TokenKind,
     pub literal: String,

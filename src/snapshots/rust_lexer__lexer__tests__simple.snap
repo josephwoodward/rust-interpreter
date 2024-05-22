@@ -1,0 +1,62 @@
+---
+source: src/lexer.rs
+expression: "\n        let five = 5;\n\n        let six=6;\n        "
+---
+[
+  {
+    "kind": "LET",
+    "literal": "let"
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "five"
+      }
+    },
+    "literal": "five"
+  },
+  {
+    "kind": "ASSIGN",
+    "literal": "boo"
+  },
+  {
+    "kind": {
+      "INT": 5
+    },
+    "literal": ""
+  },
+  {
+    "kind": "SEMICOLON",
+    "literal": "boo"
+  },
+  {
+    "kind": "LET",
+    "literal": "let"
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "six"
+      }
+    },
+    "literal": "six"
+  },
+  {
+    "kind": "ASSIGN",
+    "literal": "boo"
+  },
+  {
+    "kind": {
+      "INT": 6
+    },
+    "literal": ""
+  },
+  {
+    "kind": "SEMICOLON",
+    "literal": "boo"
+  },
+  {
+    "kind": "EOF",
+    "literal": "boo"
+  }
+]
