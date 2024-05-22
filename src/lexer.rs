@@ -93,6 +93,7 @@ impl<'a> Lexer<'a> {
                         literal: self.read_identifier().to_string(),
                     };
                 } else {
+                    println!("char is '{}'", self.ch);
                     TokenKind::ILLEGAL
                 }
             }
@@ -107,7 +108,7 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn skip_whitespace(&mut self) {
-        if self.ch == ' ' || self.ch == '\t' || self.ch == '\n' || self.ch == '\r' {
+        while self.ch.is_ascii_whitespace() {
             self.read_char();
         }
     }
@@ -119,8 +120,6 @@ impl<'a> Lexer<'a> {
         }
 
         let x = self.input[position..self.position].to_string();
-
-        // println!("chars {}", x);
         x
     }
 }
@@ -165,7 +164,10 @@ mod tests {
 
     #[test]
     fn test_assignment_mixed_spaces() {
-        let input = r#"let five = 5;let six=6;"#;
+        let input = r#"
+        let five = 5;
+        let six=6;
+        "#;
         let mut lexer = Lexer::new(input.into());
 
         let tokens = vec![
