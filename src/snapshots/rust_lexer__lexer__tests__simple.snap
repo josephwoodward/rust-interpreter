@@ -1,6 +1,6 @@
 ---
 source: src/lexer.rs
-expression: "\n        let five = 5;\n\n        let six=6;\n        "
+expression: "\n        let five = 5;\n\n        let six=6;\n        let name = \"Hello World!\";\n        "
 ---
 [
   {
@@ -17,7 +17,7 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        "
   },
   {
     "kind": "ASSIGN",
-    "literal": "boo"
+    "literal": "="
   },
   {
     "kind": {
@@ -27,7 +27,7 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        "
   },
   {
     "kind": "SEMICOLON",
-    "literal": "boo"
+    "literal": ";"
   },
   {
     "kind": "LET",
@@ -43,7 +43,7 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        "
   },
   {
     "kind": "ASSIGN",
-    "literal": "boo"
+    "literal": "="
   },
   {
     "kind": {
@@ -53,10 +53,36 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        "
   },
   {
     "kind": "SEMICOLON",
-    "literal": "boo"
+    "literal": ";"
+  },
+  {
+    "kind": "LET",
+    "literal": "let"
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "name"
+      }
+    },
+    "literal": "name"
+  },
+  {
+    "kind": "ASSIGN",
+    "literal": "="
+  },
+  {
+    "kind": {
+      "STRING": "Hello World!"
+    },
+    "literal": "\""
+  },
+  {
+    "kind": "SEMICOLON",
+    "literal": ";"
   },
   {
     "kind": "EOF",
-    "literal": "boo"
+    "literal": "\u0000"
   }
 ]

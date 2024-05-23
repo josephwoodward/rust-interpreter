@@ -103,11 +103,12 @@ impl<'a> Lexer<'a> {
             }
         };
 
+        let c = self.ch;
         self.read_char();
 
         return Token {
             kind: t,
-            literal: self.ch.to_string(),
+            literal: c.to_string(),
         };
     }
 
@@ -231,7 +232,7 @@ mod tests {
         }
     }
 
-    // #[test]
+    #[test]
     fn test_assignment_mixed_spaces_snapshot() {
         let input = r#"
         let five = 5;
