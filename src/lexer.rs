@@ -80,7 +80,10 @@ impl<'a> Lexer<'a> {
             }
             '"' => {
                 let s = self.read_string();
-                TokenKind::STRING(s)
+                return Token {
+                    kind: TokenKind::STRING(s.clone()),
+                    literal: s,
+                };
             }
             '\u{0}' => TokenKind::EOF,
             _ => {
@@ -129,13 +132,9 @@ impl<'a> Lexer<'a> {
 
         let x = self.input[pos..self.position].to_string();
 
-        // TODO: I don't think this is necessary
-        // consume the end "
-        // if self.ch == '"' {
-        //     println!("consuming until the end {}", self.ch);
-        //     self.read_char();
-        //     println!("next char is {}", self.ch);
-        // }
+        if self.ch == '"' {
+            self.read_char();
+        }
 
         return x;
     }

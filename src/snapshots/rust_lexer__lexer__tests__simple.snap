@@ -75,7 +75,7 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        let name = \
     "kind": {
       "STRING": "Hello World!"
     },
-    "literal": "\""
+    "literal": "Hello World!"
   },
   {
     "kind": "SEMICOLON",
