@@ -12,10 +12,10 @@ pub struct Lexer<'a> {
 impl<'a> Lexer<'a> {
     pub fn new(input: &'a str) -> Lexer {
         let mut lexer = Lexer {
-            position: 0,
-            read_position: 0,
-            ch: 0 as char,
             input,
+            position: 0,      // points to current position that points to ch
+            read_position: 0, // points to next character in input
+            ch: 0 as char,
         };
         lexer.read_char();
 
@@ -79,13 +79,7 @@ impl<'a> Lexer<'a> {
                 }
             }
             '"' => {
-                // println!(
-                //     "posistion: {}, read position: {}",
-                //     self.position, self.read_position
-                // );
                 let s = self.read_string();
-                println!("string: {}", s);
-
                 TokenKind::STRING(s)
             }
             '\u{0}' => TokenKind::EOF,
@@ -113,7 +107,7 @@ impl<'a> Lexer<'a> {
 
         return Token {
             kind: t,
-            literal: "boo".to_string(),
+            literal: self.ch.to_string(),
         };
     }
 
@@ -134,10 +128,13 @@ impl<'a> Lexer<'a> {
 
         let x = self.input[pos..self.position].to_string();
 
+        // TODO: I don't think this is necessary
         // consume the end "
-        if self.ch == '"' {
-            self.read_char();
-        }
+        // if self.ch == '"' {
+        //     println!("consuming until the end {}", self.ch);
+        //     self.read_char();
+        //     println!("next char is {}", self.ch);
+        // }
 
         return x;
     }
@@ -199,8 +196,7 @@ mod tests {
         let five = 5;
 
         let six=6;
-        let msg = "HelloWorld!";
-        "#;
+        let msg = "HelloWorld!";"#;
         let mut lexer = Lexer::new(input.into());
 
         let tokens = vec![
