@@ -55,6 +55,10 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn next_token(&mut self) -> Token {
+        // println!(
+        //     "self ch {}, position {} read_position {}",
+        //     self.ch, self.position, self.read_position
+        // );
         self.skip_whitespace();
         self.skip_comments();
 
@@ -97,13 +101,14 @@ impl<'a> Lexer<'a> {
                         literal: self.read_identifier().to_string(),
                     };
                 } else {
-                    println!("char is '{}'", self.ch);
+                    println!("illegal char is '{}'", self.ch);
                     TokenKind::ILLEGAL
                 }
             }
         };
 
         let c = self.ch;
+        // println!("char is {}", c);
         self.read_char();
 
         Token {
@@ -126,6 +131,12 @@ impl<'a> Lexer<'a> {
             loop {
                 self.read_char();
                 if self.ch == '\u{0}' || self.ch == '\n' {
+                    // consume the comments end
+                    if self.ch == '\n' {
+                        self.read_char();
+                        self.skip_whitespace();
+                    }
+
                     break;
                 }
             }
@@ -142,7 +153,6 @@ impl<'a> Lexer<'a> {
         }
 
         let x = self.input[pos..self.position].to_string();
-
         if self.ch == '"' {
             self.read_char();
         }
@@ -201,7 +211,7 @@ mod tests {
     }
 
     #[test]
-    fn test_assignment_mixed_spaces() {
+    fn test_assignment_mixed() {
         let input = r#"
         let five = 5;
 
@@ -259,15 +269,8 @@ mod tests {
         }
     }
 
-    // #[test]
-    fn test_assignment_mixed_spaces_snapshot() {
-        // let input = r#"
-        // let five = 5;
-
-        // let six=6;
-        // let name = "Hello World!";
-        // "#;
-
+    #[test]
+    fn test_assignment_mixed_snapshot() {
         let input = r#"
         let five = 5;
 
@@ -279,7 +282,7 @@ mod tests {
         "#;
 
         let lexer = Lexer::new(input);
-        verify_snapshot("simple_new", lexer, input);
+        verify_snapshot("general", lexer, input);
     }
 
     fn verify_snapshot(name: &str, mut l: Lexer, input: &str) {

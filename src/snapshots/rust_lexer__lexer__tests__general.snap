@@ -1,6 +1,6 @@
 ---
 source: src/lexer.rs
-expression: "\n        let five = 5;\n\n        let six=6;\n        let name = \"Hello World!\";\n        "
+expression: "\n        let five = 5;\n\n        let six=6;\n        let msg = \"HelloWorld!\";\n\n        // this is a comment\n        let x = five + six;\n        "
 ---
 [
   {
@@ -62,10 +62,10 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        let name = \
   {
     "kind": {
       "IDENTIFIER": {
-        "name": "name"
+        "name": "msg"
       }
     },
-    "literal": "name"
+    "literal": "msg"
   },
   {
     "kind": "ASSIGN",
@@ -73,9 +73,49 @@ expression: "\n        let five = 5;\n\n        let six=6;\n        let name = \
   },
   {
     "kind": {
-      "STRING": "Hello World!"
+      "STRING": "HelloWorld!"
     },
-    "literal": "Hello World!"
+    "literal": "HelloWorld!"
+  },
+  {
+    "kind": "SEMICOLON",
+    "literal": ";"
+  },
+  {
+    "kind": "LET",
+    "literal": "let"
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "x"
+      }
+    },
+    "literal": "x"
+  },
+  {
+    "kind": "ASSIGN",
+    "literal": "="
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "five"
+      }
+    },
+    "literal": "five"
+  },
+  {
+    "kind": "PLUS",
+    "literal": "+"
+  },
+  {
+    "kind": {
+      "IDENTIFIER": {
+        "name": "six"
+      }
+    },
+    "literal": "six"
   },
   {
     "kind": "SEMICOLON",
