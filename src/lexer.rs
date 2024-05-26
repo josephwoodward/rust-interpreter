@@ -98,7 +98,7 @@ impl<'a> Lexer<'a> {
                     let num = self.read_number();
                     return Token {
                         kind: TokenKind::INT(num.try_into().unwrap()),
-                        literal: self.read_identifier().to_string(),
+                        literal: num.to_string(),
                     };
                 } else {
                     println!("illegal char is '{}'", self.ch);
