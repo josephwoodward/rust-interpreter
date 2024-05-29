@@ -2,6 +2,7 @@ use token::Token;
 
 use crate::{lexer::Lexer, token::TokenKind};
 mod lexer;
+mod parser;
 mod token;
 
 fn main() {
