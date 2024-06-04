@@ -1,6 +1,7 @@
 use token::Token;
 
 use crate::{lexer::Lexer, token::TokenKind};
+mod ast;
 mod lexer;
 mod parser;
 mod token;
