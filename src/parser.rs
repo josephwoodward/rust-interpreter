@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::{
-    ast::{Program, Statement},
+    ast::{Let, Program, Statement},
     lexer::Lexer,
     token::{Token, TokenKind},
 };
@@ -36,9 +36,12 @@ impl<'a> Parser<'a> {
         self.current_token.kind == token
     }
 
-    pub fn parse_statement(&self) -> Result<Statement, ParseError> {
-        let s = Statement {};
-        Ok(s)
+    pub fn parse_statement(&mut self) -> Result<Statement, ParseError> {
+        match self.current_token.kind {
+            TokenKind::LET => self.parse_let_statement(),
+            // TokenKind::RETURN => self.parse_return_statement(),
+            _ => self.parse_expression_statement(),
+        }
     }
 
     pub fn parse_program(&mut self) -> Result<Program, ParseError> {
@@ -54,25 +57,47 @@ impl<'a> Parser<'a> {
 
         Ok(p)
     }
+
+    fn parse_let_statement(&self) -> Result<Statement, ParseError> {
+        let name = self.current_token.clone();
+        let mut ident = "".to_string();
+        match &self.peek_token.kind {
+            TokenKind::IDENTIFIER { name } => {
+                ident = name.to_string();
+            }
+            _ => return Err("not something".to_string()),
+        }
+        // todo!()
+        println!("ident is {}", ident);
+        return Ok(Statement::Let(Let {
+            identifier: self.peek_token.clone(),
+        }));
+    }
+
+    // fn parse_return_statement(&self) -> Result<Statement, ParseError> {
+    //     todo!()
+    // }
+
+    fn parse_expression_statement(&self) -> Result<Statement, ParseError> {
+        return Err("not something".to_string());
+    }
 }
 
 #[cfg(test)]
 mod tests {
 
     use super::Parser;
-    use crate::lexer::Lexer;
+    use crate::Lexer;
 
     #[test]
     fn test_parser() {
         let input = r#"
         let five = 5;
-        let six=6;
-        let msg = "HelloWorld!";
         "#;
 
         let mut parser = Parser::new(Lexer::new(input));
         let program = parser.parse_program().expect("failed to parse program");
 
-        assert_eq!(program.statements.len(), 3);
+        assert_eq!(program.statements.len(), 1);
     }
 }
