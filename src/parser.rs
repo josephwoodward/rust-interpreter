@@ -59,7 +59,7 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_let_statement(&self) -> Result<Statement, ParseError> {
-        let name = self.current_token.clone();
+        let _name = self.current_token.clone();
         let mut ident = "".to_string();
         match &self.peek_token.kind {
             TokenKind::IDENTIFIER { name } => {
@@ -69,9 +69,10 @@ impl<'a> Parser<'a> {
         }
         // todo!()
         println!("ident is {}", ident);
-        return Ok(Statement::Let(Let {
+
+        Ok(Statement::Let(Let {
             identifier: self.peek_token.clone(),
-        }));
+        }))
     }
 
     // fn parse_return_statement(&self) -> Result<Statement, ParseError> {
@@ -79,7 +80,9 @@ impl<'a> Parser<'a> {
     // }
 
     fn parse_expression_statement(&self) -> Result<Statement, ParseError> {
-        return Err("not something".to_string());
+        Ok(Statement::Identifier {
+            name: "Nothing".to_string(),
+        })
     }
 }
 
@@ -87,7 +90,11 @@ impl<'a> Parser<'a> {
 mod tests {
 
     use super::Parser;
-    use crate::Lexer;
+    use crate::{
+        ast::{Let, Statement},
+        token::{Token, TokenKind},
+        Lexer,
+    };
 
     #[test]
     fn test_parser() {
@@ -98,6 +105,21 @@ mod tests {
         let mut parser = Parser::new(Lexer::new(input));
         let program = parser.parse_program().expect("failed to parse program");
 
-        assert_eq!(program.statements.len(), 1);
+        assert_eq!(program.statements.len(), 5);
+
+        let exp = Statement::Let(Let {
+            identifier: Token {
+                kind: TokenKind::IDENTIFIER {
+                    name: "five".to_string(),
+                },
+                literal: "five".to_string(),
+            },
+        });
+        assert_eq!(
+            program.statements[0],
+            exp // Statement::Let(Let {
+                //     identifier: (TokenKind::IDENTIFIER { name:  })
+                // })
+        )
     }
 }

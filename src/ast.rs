@@ -17,6 +17,7 @@ impl Program {
 #[serde(untagged)]
 pub enum Statement {
     Let(Let),
+    Identifier { name: String },
 }
 
 #[derive(Clone, Debug, Eq, Serialize, Deserialize, Hash, PartialEq)]
