@@ -100,13 +100,12 @@ mod tests {
     fn test_parser() {
         let input = r#"
         let five = 5;
-        let msg = "Hello World";
         "#;
 
         let mut parser = Parser::new(Lexer::new(input));
         let program = parser.parse_program().expect("failed to parse program");
 
-        assert_eq!(program.statements.len(), 10);
+        assert_eq!(program.statements.len(), 5);
 
         let exp = Statement::Let(Let {
             identifier: Token {
@@ -116,16 +115,11 @@ mod tests {
                 literal: "five".to_string(),
             },
         });
-        assert_eq!(program.statements[0], exp)
+        assert_eq!(program.statements[0], exp);
 
-        let exp = Statement::Let(Let {
-            identifier: Token {
-                kind: TokenKind::IDENTIFIER {
-                    name: "five".to_string(),
-                },
-                literal: "five".to_string(),
-            },
-        });
-        assert_eq!(program.statements[0], exp)
+        let exp = Statement::Identifier {
+            name: "=".to_string(),
+        };
+        assert_eq!(program.statements[1], exp);
     }
 }

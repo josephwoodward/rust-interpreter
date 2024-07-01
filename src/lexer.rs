@@ -107,13 +107,11 @@ impl<'a> Lexer<'a> {
             }
         };
 
-        let c = self.ch;
-        // println!("char is {}", c);
         self.read_char();
 
         Token {
             kind: t,
-            literal: c.to_string(),
+            literal: self.ch.to_string(),
         }
     }
 

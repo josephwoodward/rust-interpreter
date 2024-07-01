@@ -20,3 +20,7 @@ fn main() {
         }
     }
 }
+
+// pub trait Printer {
+//     fn print(&mut self )
+// }
