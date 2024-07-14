@@ -17,11 +17,18 @@ impl Program {
 #[serde(untagged)]
 pub enum Statement {
     Let(Let),
+    Return(ReturnStatement),
     Identifier { name: String },
 }
 
 #[derive(Clone, Debug, Eq, Serialize, Deserialize, Hash, PartialEq)]
 #[serde(tag = "type")]
 pub struct Let {
-    pub identifier: Token, // rust can't do precise type with enum
+    pub identifier: Token,
+}
+
+#[derive(Clone, Debug, Eq, Serialize, Deserialize, Hash, PartialEq)]
+#[serde(tag = "type")]
+pub struct ReturnStatement {
+    pub identifier: Token,
 }

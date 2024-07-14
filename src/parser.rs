@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::{
-    ast::{Let, Program, Statement},
+    ast::{Let, Program, ReturnStatement, Statement},
     lexer::Lexer,
     token::{Token, TokenKind},
 };
@@ -39,7 +39,7 @@ impl<'a> Parser<'a> {
     pub fn parse_statement(&mut self) -> Result<Statement, ParseError> {
         match self.current_token.kind {
             TokenKind::LET => self.parse_let_statement(),
-            // TokenKind::RETURN => self.parse_return_statement(),
+            TokenKind::RETURN => self.parse_return_statement(),
             _ => self.parse_expression_statement(),
         }
     }
@@ -67,17 +67,23 @@ impl<'a> Parser<'a> {
             }
             _ => return Err("not something".to_string()),
         }
-        // todo!()
-        println!("ident is {}", ident);
 
         Ok(Statement::Let(Let {
             identifier: self.peek_token.clone(),
         }))
     }
 
-    // fn parse_return_statement(&self) -> Result<Statement, ParseError> {
-    //     todo!()
-    // }
+    fn parse_return_statement(&mut self) -> Result<Statement, ParseError> {
+        //TODO: Parse expressions, currently only parses single values
+        self.next_token();
+
+        Ok(Statement::Return(ReturnStatement {
+            identifier: Token {
+                kind: TokenKind::RETURN,
+                literal: self.current_token.literal.to_string(),
+            },
+        }))
+    }
 
     fn parse_expression_statement(&self) -> Result<Statement, ParseError> {
         Ok(Statement::Identifier {
@@ -91,13 +97,13 @@ mod tests {
 
     use super::Parser;
     use crate::{
-        ast::{Let, Statement},
+        ast::{Let, ReturnStatement, Statement},
         token::{Token, TokenKind},
         Lexer,
     };
 
     #[test]
-    fn test_parser() {
+    fn test_let_statement() {
         let input = r#"
         let five = 5;
         "#;
@@ -116,10 +122,25 @@ mod tests {
             },
         });
         assert_eq!(program.statements[0], exp);
+    }
 
-        let exp = Statement::Identifier {
-            name: "=".to_string(),
-        };
-        assert_eq!(program.statements[1], exp);
+    #[test]
+    fn test_return_statement() {
+        let input = r#"
+        return 5;
+        "#;
+
+        let mut parser = Parser::new(Lexer::new(input));
+        let program = parser.parse_program().expect("failed to parse program");
+
+        assert_eq!(program.statements.len(), 2);
+
+        let exp = Statement::Return(ReturnStatement {
+            identifier: Token {
+                kind: TokenKind::RETURN,
+                literal: "5".to_string(),
+            },
+        });
+        assert_eq!(program.statements[0], exp);
     }
 }
