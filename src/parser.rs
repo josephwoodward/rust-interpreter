@@ -60,13 +60,17 @@ impl<'a> Parser<'a> {
 
     fn parse_let_statement(&self) -> Result<Statement, ParseError> {
         let _name = self.current_token.clone();
-        let mut ident = "".to_string();
+
+        // let mut ident = "".to_string();
         match &self.peek_token.kind {
             TokenKind::IDENTIFIER { name } => {
-                ident = name.to_string();
+                println!("ident is {}", name);
+                // let ident = name.to_string();
             }
             _ => return Err("not something".to_string()),
         }
+
+        // let x = self.next_token();
 
         Ok(Statement::Let(Let {
             identifier: self.peek_token.clone(),
@@ -74,15 +78,20 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_return_statement(&mut self) -> Result<Statement, ParseError> {
-        //TODO: Parse expressions, currently only parses single values
-        self.next_token();
-
-        Ok(Statement::Return(ReturnStatement {
+        let curr_token = self.current_token.clone();
+        let st = Statement::Return(ReturnStatement {
             identifier: Token {
-                kind: TokenKind::RETURN,
-                literal: self.current_token.literal.to_string(),
+                kind: curr_token.kind,
+                literal: curr_token.literal.to_string(),
             },
-        }))
+        });
+
+        // TODO: Revisit to parse expression
+        while !self.current_token_is(TokenKind::SEMICOLON) {
+            self.next_token();
+        }
+
+        Ok(st)
     }
 
     fn parse_expression_statement(&self) -> Result<Statement, ParseError> {
@@ -113,7 +122,15 @@ mod tests {
 
         assert_eq!(program.statements.len(), 5);
 
-        let exp = Statement::Let(Let {
+        // TokenKind::LET,
+        // TokenKind::IDENTIFIER {
+        //     name: "five".to_string(),
+        // },
+        // TokenKind::ASSIGN,
+        // TokenKind::INT(5),
+        // TokenKind::SEMICOLON,
+
+        let exp1 = Statement::Let(Let {
             identifier: Token {
                 kind: TokenKind::IDENTIFIER {
                     name: "five".to_string(),
@@ -121,7 +138,16 @@ mod tests {
                 literal: "five".to_string(),
             },
         });
-        assert_eq!(program.statements[0], exp);
+        // let exp2 = Statement::Let(Let {
+        //     identifier: Token {
+        //         kind: TokenKind::IDENTIFIER {
+        //             name: "x".to_string(),
+        //         },
+        //         literal: "five".to_string(),
+        //     },
+        // });
+        assert_eq!(program.statements[0], exp1);
+        // assert_eq!(program.statements[1], exp2);
     }
 
     #[test]
@@ -133,12 +159,12 @@ mod tests {
         let mut parser = Parser::new(Lexer::new(input));
         let program = parser.parse_program().expect("failed to parse program");
 
-        assert_eq!(program.statements.len(), 2);
+        assert_eq!(program.statements.len(), 1);
 
         let exp = Statement::Return(ReturnStatement {
             identifier: Token {
                 kind: TokenKind::RETURN,
-                literal: "5".to_string(),
+                literal: "return".to_string(),
             },
         });
         assert_eq!(program.statements[0], exp);
