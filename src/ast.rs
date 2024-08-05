@@ -18,6 +18,7 @@ impl Program {
 pub enum Statement {
     Let(Let),
     Return(ReturnStatement),
+    Expression(ExpressionStatement),
     Identifier { name: String },
 }
 
@@ -30,5 +31,11 @@ pub struct Let {
 #[derive(Clone, Debug, Eq, Serialize, Deserialize, Hash, PartialEq)]
 #[serde(tag = "type")]
 pub struct ReturnStatement {
+    pub identifier: Token,
+}
+
+#[derive(Clone, Debug, Eq, Serialize, Deserialize, Hash, PartialEq)]
+#[serde(tag = "type")]
+pub struct ExpressionStatement {
     pub identifier: Token,
 }
